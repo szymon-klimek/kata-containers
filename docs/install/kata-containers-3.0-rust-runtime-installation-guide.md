@@ -46,57 +46,57 @@ Follow the [`kata-deploy`](../../tools/packaging/kata-deploy/README.md).
 
 * Download `Rustup` and install  `Rust`
     > **Notes:**
-    > For Rust version, please set `RUST_VERSION` to the value of `languages.rust.meta.newest-version key` in [`versions.yaml`](../../versions.yaml) or, if `yq` is available on your system, run `export RUST_VERSION=$(yq read versions.yaml languages.rust.meta.newest-version)`.
+    > For Rust version, please set `RUST_VERSION` to the value of `languages.rust.meta.newest-version` key in [`versions.yaml`](../../versions.yaml) or, if `yq` is available on your system, run `export RUST_VERSION=$(yq read versions.yaml languages.rust.meta.newest-version)`.
 
     Example for `x86_64`
-    ```
-    $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    $ source $HOME/.cargo/env
-    $ rustup install ${RUST_VERSION}
-    $ rustup default ${RUST_VERSION}-x86_64-unknown-linux-gnu
+    ```bash
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    source $HOME/.cargo/env
+    rustup install ${RUST_VERSION}
+    rustup default ${RUST_VERSION}-x86_64-unknown-linux-gnu
     ```
 
 * Musl support for fully static binary
     
     Example for `x86_64`
-    ```
-    $ rustup target add x86_64-unknown-linux-musl
+    ```bash
+    rustup target add x86_64-unknown-linux-musl
     ```
 * [Musl `libc`](http://musl.libc.org/) install
 
     Example for musl 1.2.3
-    ```
-    $ curl -O https://git.musl-libc.org/cgit/musl/snapshot/musl-1.2.3.tar.gz
-    $ tar vxf musl-1.2.3.tar.gz
-    $ cd musl-1.2.3/
-    $ ./configure --prefix=/usr/local/
-    $ make && sudo make install
+    ```bash
+    curl -O https://git.musl-libc.org/cgit/musl/snapshot/musl-1.2.3.tar.gz
+    tar vxf musl-1.2.3.tar.gz
+    cd musl-1.2.3/
+    ./configure --prefix=/usr/local/
+    make && sudo make install
     ```
 
 
 ### Install Kata 3.0 Rust Runtime Shim
 
-```
-$ git clone https://github.com/kata-containers/kata-containers.git
-$ cd kata-containers/src/runtime-rs
-$ make && sudo make install
+```bash
+git clone https://github.com/kata-containers/kata-containers.git
+cd kata-containers/src/runtime-rs
+make && sudo make install
 ```
 After running the command above, the default config file `configuration.toml` will be installed under `/usr/share/defaults/kata-containers/`,  the binary file `containerd-shim-kata-v2` will be installed under `/usr/local/bin/` .
 
 ### Install Shim Without Builtin Dragonball VMM
 
 By default, runtime-rs includes the `Dragonball` VMM. To build without the built-in `Dragonball` hypervisor, use `make USE_BUILDIN_DB=false`:
-```bash
+```console
 $ cd kata-containers/src/runtime-rs
 $ make USE_BUILDIN_DB=false
 ```
 After building, specify the desired hypervisor during installation using `HYPERVISOR`. For example, to use `qemu` or `cloud-hypervisor`:
 
-```
+```bash
 sudo make install HYPERVISOR=qemu
 ```
 or
-```
+```bash
 sudo make install HYPERVISOR=cloud-hypervisor
 ```
 
